@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    res/values/preloaded_fonts.xml
+    Tells Android to preload Poppins before the app starts.
+    Also add this inside <application> in AndroidManifest.xml:
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+-->
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/poppins</item>
+    </array>
+</resources>

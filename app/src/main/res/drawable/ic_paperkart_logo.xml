@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ic_paper_cart.xml  —  Android Vector Drawable
+  Size: 24dp x 24dp  |  Background: light pastel blue-white
+  Layers: bg rect → handle → cart body → wheels → paper doc → fold → badge
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- BACKGROUND - soft pastel light fill -->
+    <path
+        android:name="bg_rect"
+        android:pathData="M2,2 L22,2 Q23,2 23,3 L23,21 Q23,22 22,22 L2,22 Q1,22 1,21 L1,3 Q1,2 2,2 Z"
+        android:fillColor="#E8F4FF"/>
+
+    <path
+        android:name="bg_ring"
+        android:pathData="M2.5,2.5 L21.5,2.5 Q22.5,2.5 22.5,3.5 L22.5,20.5 Q22.5,21.5 21.5,21.5 L2.5,21.5 Q1.5,21.5 1.5,20.5 L1.5,3.5 Q1.5,2.5 2.5,2.5 Z"
+        android:strokeColor="#C5DEFF"
+        android:strokeWidth="0.4"
+        android:fillColor="@android:color/transparent"/>
+
+    <!-- CART HANDLE -->
+    <path
+        android:name="cart_handle"
+        android:pathData="M4,13 Q4,10 7,10 L20,10 Q22,10 22,12 L22,13"
+        android:strokeColor="#1A5FBE"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent"/>
+
+    <!-- CART BODY -->
+    <path
+        android:name="cart_body"
+        android:pathData="M4,13 L5.2,20 Q5.5,21.5 7,21.5 L18,21.5 Q19.5,21.5 19.8,20 L21,13 Z"
+        android:fillColor="#4F8EF7"
+        android:strokeColor="#1A5FBE"
+        android:strokeWidth="0.4"/>
+
+    <path
+        android:name="cart_highlight"
+        android:pathData="M4.8,13.5 L5.9,19.5 Q6.1,20.8 7.3,20.8 L17.7,20.8 Q18.9,20.8 19.1,19.5 L20.2,13.5 Z"
+        android:fillColor="#6FAEF8"
+        android:fillAlpha="0.35"/>
+
+    <!-- LEFT WHEEL -->
+    <path
+        android:name="wheel_left_outer"
+        android:pathData="M8,23.5 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0"
+        android:fillColor="#0C3F8A"/>
+    <path
+        android:name="wheel_left_inner"
+        android:pathData="M8,23.5 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0"
+        android:fillColor="#FFFFFF"/>
+    <path
+        android:name="wheel_left_hub"
+        android:pathData="M8,23.5 m-0.5,0 a0.5,0.5 0 1,0 1,0 a0.5,0.5 0 1,0 -1,0"
+        android:fillColor="#4F8EF7"/>
+
+    <!-- RIGHT WHEEL -->
+    <path
+        android:name="wheel_right_outer"
+        android:pathData="M17,23.5 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0"
+        android:fillColor="#0C3F8A"/>
+    <path
+        android:name="wheel_right_inner"
+        android:pathData="M17,23.5 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0"
+        android:fillColor="#FFFFFF"/>
+    <path
+        android:name="wheel_right_hub"
+        android:pathData="M17,23.5 m-0.5,0 a0.5,0.5 0 1,0 1,0 a0.5,0.5 0 1,0 -1,0"
+        android:fillColor="#4F8EF7"/>
+
+    <!-- PAPER DOCUMENT - back sheet -->
+    <path
+        android:name="paper_back"
+        android:pathData="M9,2 L16,2 Q17,2 17,3 L17,12.5 Q17,13.5 16,13.5 L9,13.5 Q8,13.5 8,12.5 L8,3 Q8,2 9,2 Z"
+        android:fillColor="#BDD8FF"
+        android:fillAlpha="0.55"/>
+
+    <!-- PAPER DOCUMENT - main sheet -->
+    <path
+        android:name="paper_main"
+        android:pathData="M7,1 L13.2,1 L16,3.8 L16,12 Q16,13 15,13 L7,13 Q6,13 6,12 L6,2 Q6,1 7,1 Z"
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#BDD8FF"
+        android:strokeWidth="0.5"/>
+
+    <!-- FOLD CORNER -->
+    <path
+        android:name="fold_triangle"
+        android:pathData="M13.2,1 L16,3.8 L13.2,3.8 Z"
+        android:fillColor="#85B7EB"/>
+    <path
+        android:name="fold_crease"
+        android:pathData="M13.2,1 L16,3.8"
+        android:strokeColor="#4F8EF7"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+
+    <!-- DOCUMENT LINES -->
+    <path
+        android:name="line_title"
+        android:pathData="M8,5.5 L11.5,5.5"
+        android:strokeColor="#1A5FBE"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"/>
+    <path
+        android:name="line_1"
+        android:pathData="M8,7.5 L13.5,7.5"
+        android:strokeColor="#85B7EB"
+        android:strokeWidth="0.9"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"/>
+    <path
+        android:name="line_2"
+        android:pathData="M8,9.2 L12.5,9.2"
+        android:strokeColor="#85B7EB"
+        android:strokeWidth="0.9"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"/>
+    <path
+        android:name="line_3"
+        android:pathData="M8,10.8 L10.5,10.8"
+        android:strokeColor="#85B7EB"
+        android:strokeWidth="0.9"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"/>
+
+    <!-- BADGE -->
+    <path
+        android:name="badge_bg"
+        android:pathData="M18.5,4 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0"
+        android:fillColor="#FFBE45"/>
+    <path
+        android:name="badge_ring"
+        android:pathData="M18.5,4 m-2.4,0 a2.4,2.4 0 1,0 4.8,0 a2.4,2.4 0 1,0 -4.8,0"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="0.5"
+        android:strokeAlpha="0.45"/>
+    <path
+        android:name="badge_num"
+        android:pathData="M17.6,2.6 Q17.6,2.1 18,2.1 Q18.5,2.1 18.5,2.6 Q18.5,3.0 18.1,3.05 Q18.5,3.1 18.5,3.6 Q18.5,4.2 17.8,4.2 Q17.4,4.2 17.3,3.9"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="0.65"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent"/>
+
+</vector>
+
+    <!--
+      TINT COLOUR PALETTE
+      Default  bg:#E8F4FF  icon:#1A5FBE  (sky blue)
+      Green    bg:#E4F8F0  icon:#0F6E56  tint:#1D9E75
+      Purple   bg:#EEEDFE  icon:#3C3489  tint:#534AB7
+      Amber    bg:#FFF3DC  icon:#854F0B  tint:#BA7517
+      Coral    bg:#FAECE7  icon:#993C1D  tint:#D85A30
+      Dark     bg:#0C3F8A  icon:#FFFFFF  (invert fills)
+    -->

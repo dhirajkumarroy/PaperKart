@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <!-- Outer circle background -->
+    <path
+        android:fillColor="#6C63FF"
+        android:pathData="M32,2 C15.43,2 2,15.43 2,32 C2,48.57 15.43,62 32,62 C48.57,62 62,48.57 62,32 C62,15.43 48.57,2 32,2 Z"/>
+
+    <!-- Abstract 'A' / shield mark in white -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,14 L46,42 H38 L32,28 L26,42 H18 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,36 H40 V40 H24 Z"/>
+
+</vector>

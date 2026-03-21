@@ -1,5 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- ── Backgrounds (Lighter, Cleaner) ───────────────────────── -->
+    <color name="bg_light">#F8F9FA</color>
+    <color name="bg_white">#FFFFFF</color>
+    <color name="bg_dark">#121212</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="input_background">#F3F4F6</color>
+
+    <!-- ── Brand / Accent (Modern Indigo) ───────────────────────── -->
+    <color name="accent_primary">#4F46E5</color>
+    <color name="accent_primary_light">#EEF2FF</color>
+    <color name="accent_secondary">#EC4899</color>
+    <color name="accent_secondary_light">#FDF2F8</color>
+
+    <!-- ── Text (Better Contrast) ──────────────────────────────── -->
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#4B5563</color>
+    <color name="text_tertiary">#9CA3AF</color>
+    <color name="text_primary_dark">#F9FAFB</color>
+    <color name="text_secondary_dark">#D1D5DB</color>
+    <color name="text_label">#374151</color>
+
+    <!-- ── UI Chrome ────────────────────────────────────────────── -->
+    <color name="icon_tint">#6B7280</color>
+    <color name="divider_color">#E5E7EB</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="error_red">#EF4444</color>
+    <color name="success_green">#10B981</color>
+
+    <!-- ── Input Strokes ────────────────────────────────────────── -->
+    <color name="input_stroke_default">#E5E7EB</color>
+    <color name="input_stroke_focused">#4F46E5</color>
+    <color name="input_stroke_error">#EF4444</color>
+
+    <!-- ── Chips ────────────────────────────────────────────────── -->
+    <color name="chip_background_default">#F3F4F6</color>
+    <color name="chip_background_selected">#EEF2FF</color>
+    <color name="chip_text_default">#4B5563</color>
+    <color name="chip_text_selected">#4F46E5</color>
+
+    <!-- Bottom nav specific -->
+    <color name="bottom_nav_bg">#F8FAFF</color>
+    <color name="bottom_nav_active">#4F46E5</color>
+    <color name="bottom_nav_inactive">#9CA3AF</color>
+    <color name="bottom_nav_indicator">#EDE9FE</color>
+    <color name="bottom_nav_divider">#6C63FF</color>
+
+    <color name="purple_500">#FF6200EE</color>
+
+    <color name="grey">#808080</color>
+
+    <color name="paper_blue_primary">#2563EB</color>
+    <color name="paper_blue_light">#60A5FA</color>
+
+
 </resources>

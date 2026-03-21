@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/chip_text_selected"
+        android:state_checked="true" />
+    <item android:color="@color/chip_text_default" />
+
+    <!-- ── Backgrounds ────────────────────────────────────────── -->
+    <color name="bg_light">#F8F9FA</color>
+    <color name="bg_white">#FFFFFF</color>
+    <color name="bg_dark">#121212</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="input_background">#F3F4F6</color>
+
+    <!-- ── Brand / Accent ──────────────────────────────────────── -->
+    <color name="accent_primary">#4F46E5</color>
+    <color name="accent_primary_light">#EEF2FF</color>
+    <color name="accent_secondary">#EC4899</color>
+    <color name="accent_secondary_light">#FDF2F8</color>
+
+    <!-- ── Text ───────────────────────────────────────────────── -->
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#4B5563</color>
+    <color name="text_tertiary">#9CA3AF</color>
+    <color name="text_primary_dark">#F9FAFB</color>
+    <color name="text_secondary_dark">#D1D5DB</color>
+    <color name="text_label">#374151</color>
+
+    <!-- ── UI Chrome ────────────────────────────────────────────── -->
+    <color name="icon_tint">#6B7280</color>
+    <color name="divider_color">#E5E7EB</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="error_red">#EF4444</color>
+    <color name="success_green">#10B981</color>
+
+    <!-- ── Input Strokes ────────────────────────────────────────── -->
+    <color name="input_stroke_default">#E5E7EB</color>
+    <color name="input_stroke_focused">#4F46E5</color>
+    <color name="input_stroke_error">#EF4444</color>
+
+    <!-- ── Chips ────────────────────────────────────────────────── -->
+    <color name="chip_background_default">#F3F4F6</color>
+    <color name="chip_background_selected">#EEF2FF</color>
+    <color name="chip_text_default">#4B5563</color>
+    <color name="chip_text_selected">#4F46E5</color>
+
+    <!-- ── Bottom Navigation ────────────────────────────────────── -->
+    <color name="bottom_nav_bg">#F8FAFF</color>
+    <color name="bottom_nav_active">#4F46E5</color> <!-- Unified to accent_primary -->
+    <color name="bottom_nav_inactive">#9CA3AF</color>
+    <color name="bottom_nav_indicator">#EDE9FE</color>
+    <color name="bottom_nav_divider">#6C63FF</color>
+
+    <!-- ── Styles ─────────────────────────────────────────────── -->
+    <style name="TextAppearance.App.BottomNavActive"
+        parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <style name="TextAppearance.App.BottomNavInactive"
+        parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Widget.App.BottomNav.ActiveIndicator"
+        parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/bottom_nav_indicator</item>
+        <item name="android:width">56dp</item>
+        <item name="android:height">32dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.BottomNavIndicator</item>
+    </style>
+
+    <style name="ShapeAppearance.App.BottomNavIndicator"
+        parent="ShapeAppearance.Material3.Corner.Full">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+</selector>

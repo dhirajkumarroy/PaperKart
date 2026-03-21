@@ -1,3 +1,65 @@
 <resources>
     <string name="app_name">PaperKart</string>
+    <string name="app_logo_desc">App Logo</string>
+    <string name="login_tagline">Welcome back — let\'s get you in.</string>
+    <string name="label_sign_in">Sign in</string>
+    <string name="label_sign_in_subtitle">Enter your credentials to continue</string>
+    <string name="label_email">Email address</string>
+    <string name="hint_email">you@example.com</string>
+    <string name="label_password">Password</string>
+    <string name="hint_password">••••••••</string>
+    <string name="label_forgot_password">Forgot password?</string>
+    <string name="btn_sign_in">Sign In</string>
+    <string name="label_or">or continue with</string>
+    <string name="btn_google">Google</string>
+    <string name="btn_apple">Apple</string>
+    <string name="label_no_account">Don\'t have an account?</string>
+    <string name="btn_create_account">Create one</string>
+
+    <string name="tab_email">Email</string>
+    <string name="tab_phone_otp">Phone OTP</string>
+    <string name="label_phone">Phone Number</string>
+    <string name="hint_phone">+91 9876543210</string>
+    <string name="btn_send_otp">Send OTP</string>
+    <string name="btn_resend_otp">Resend OTP</string>
+    <string name="btn_verify_otp">Verify &amp; Sign In</string>
+    <string name="label_otp">Enter OTP</string>
+    <string name="hint_otp">4–6 digit OTP</string>
+
+
+    <!-- Add these to res/values/strings.xml -->
+
+    <!-- ── Register ───────────────────────────────────────── -->
+    <string name="register_tagline">Join thousands of happy readers</string>
+    <string name="label_create_account">Create account</string>
+    <string name="label_register_subtitle">Fill in the details below to get started</string>
+    <string name="label_name">Full Name</string>
+    <string name="hint_name">Your full name</string>
+    <string name="label_confirm_password">Confirm Password</string>
+    <string name="hint_confirm_password">Re-enter your password</string>
+    <string name="helper_password">Min 8 characters</string>
+    <string name="label_have_account">Already have an account?</string>
+
+    <!-- ── Forgot Password ────────────────────────────────── -->
+    <string name="label_forgot_title">Forgot password?</string>
+    <string name="label_forgot_subtitle">Enter your email and we\'ll send you a reset link</string>
+    <string name="btn_send_reset_link">Send Reset Link</string>
+    <string name="label_remember_password">Remember your password?</string>
+
+    <!-- ── Reset Password ─────────────────────────────────── -->
+    <string name="label_reset_password">Reset Password</string>
+    <string name="label_reset_title">Set new password</string>
+    <string name="label_reset_subtitle">Your new password must be at least 8 characters</string>
+    <string name="label_new_password">New Password</string>
+    <string name="hint_new_password">Enter new password</string>
+    <string name="btn_reset_password">Reset Password</string>
+
+    <!-- ── Shared ─────────────────────────────────────────── -->
+<!--    <string name="label_no_account">Don\'t have an account?</string>-->
+
+    <style name="CircleShape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>
