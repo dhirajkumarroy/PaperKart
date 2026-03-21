@@ -9,11 +9,16 @@ import kotlinx.coroutines.launch
 class CartViewModel(private val repo: CartRepository) : ViewModel() {
 
     val cart = MutableLiveData<CartResponse?>()
-    val loading = MutableLiveData<Boolean>()
-    val totalPrice = MutableLiveData<Double>()
+    val totalPrice = MutableLiveData<Double>(0.0)
+
+    // Fixed: Changed 'loading' to 'isLoading' to match Fragment reference
+    val isLoading = MutableLiveData<Boolean>(false)
+
+    // Added: Missing error LiveData for the Fragment's Toast
+    val error = MutableLiveData<String?>(null)
 
     fun loadCart() {
-        loading.value = true
+        isLoading.value = true
         viewModelScope.launch {
             try {
                 val response = repo.getCart()
@@ -21,22 +26,37 @@ class CartViewModel(private val repo: CartRepository) : ViewModel() {
                     val data = response.body()
                     cart.postValue(data)
                     calculateTotal(data)
+                } else {
+                    error.postValue("Failed to load cart: ${response.code()}")
                 }
-            } catch (e: Exception) { /* Handle error */ }
-            loading.postValue(false)
+            } catch (e: Exception) {
+                error.postValue("Connection error: ${e.localizedMessage}")
+            } finally {
+                isLoading.postValue(false)
+            }
         }
     }
 
     fun removeItem(productId: String, sku: String) {
+        isLoading.value = true // Show loading while deleting
         viewModelScope.launch {
-            val response = repo.removeItem(productId, sku)
-            if (response.isSuccessful) {
-                loadCart() // Refresh list after removal
+            try {
+                val response = repo.removeItem(productId, sku)
+                if (response.isSuccessful) {
+                    loadCart() // Refresh list after removal
+                } else {
+                    error.postValue("Could not remove item")
+                    isLoading.postValue(false)
+                }
+            } catch (e: Exception) {
+                error.postValue(e.localizedMessage)
+                isLoading.postValue(false)
             }
         }
     }
 
     private fun calculateTotal(data: CartResponse?) {
+        // Ensure priceAtTime exists in your DTO; if not, use 'price'
         val total = data?.items?.sumOf { it.priceAtTime * it.quantity } ?: 0.0
         totalPrice.postValue(total)
     }

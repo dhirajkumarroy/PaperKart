@@ -1,5 +1,6 @@
 package com.example.paperkart.features.product
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,8 +15,12 @@ class ProductAdapter(
 ) : RecyclerView.Adapter<ProductAdapter.VH>() {
 
     companion object {
-        // FIX: Added trailing slash
-        private const val BASE_URL = "http://192.168.0.198:3000/"
+        // ✅ Updated to your current Mac IP
+        private const val BASE_URL = "http://192.168.0.197:3000/"
+
+        // The "Ghost" IP that causes the timeout
+        private const val OLD_IP = "192.168.0.198"
+        private const val CURRENT_IP = "192.168.0.197"
     }
 
     inner class VH(val binding: ItemProductBinding) :
@@ -33,32 +38,42 @@ class ProductAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = list[position]
 
+        // 1. Set Text Data
         holder.binding.tvName.text = item.name
         holder.binding.tvPrice.text = "₹${item.minPrice}"
 
-        // FIX: Safe URL construction
+        // 2. Build and Fix the Image URL
         val imageUrl = when {
             item.coverImage.isNullOrBlank() -> null
-            item.coverImage.startsWith("http") -> item.coverImage
+
+            // If the URL is absolute (starts with http)
+            item.coverImage.startsWith("http") -> {
+                // ✅ DYNAMIC FIX: Swap the old IP for the new one if found
+                item.coverImage.replace(OLD_IP, CURRENT_IP)
+            }
+
+            // If the URL is relative (e.g., "uploads/img.jpg")
             else -> {
-                val cleanPath = if (item.coverImage.startsWith("/"))
-                    item.coverImage.substring(1) else item.coverImage
+                val cleanPath = item.coverImage.removePrefix("/")
                 BASE_URL + cleanPath
             }
         }
 
+        // 3. Load with Glide
         Glide.with(holder.itemView.context)
-            .load(imageUrl ?: R.drawable.ic_launcher_background)
-            .placeholder(R.drawable.ic_launcher_background)
-            .error(R.drawable.ic_launcher_background)
+            .load(imageUrl)
+            .placeholder(R.drawable.ic_cart) // Your custom PaperKart logo
+            .error(R.drawable.ic_cart)      // Fallback if network fails
+            .centerCrop()
             .into(holder.binding.ivImage)
 
-        // Trigger the click lambda with ID
+        // 4. Handle Clicks (Ensure this matches your DTO field: id vs _id)
         holder.itemView.setOnClickListener {
-            onClick(item.id)
+            item.id?.let { id -> onClick(id) }
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(newList: List<ProductDto>) {
         list = newList
         notifyDataSetChanged()

@@ -2,10 +2,11 @@ package com.example.paperkart.features.product
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.paperkart.R
@@ -27,31 +28,25 @@ class ProductDetailActivity : AppCompatActivity() {
     private lateinit var session: SessionManager
 
     companion object {
-        // Change this to match your local Node.js server IP
         private const val BASE_URL = "http://192.168.0.198:3000/"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. Setup View Binding
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 2. Production Look: White Status Bar + Black Icons
         setupSystemUI()
 
-        // 3. Initialize Helpers
         session = SessionManager(this)
         val api = RetrofitClient.getInstance(this).create(ProductApi::class.java)
         repo = ProductRepository(api)
 
-        // 4. Handle Navigation
-        binding.btnBack.setOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // 5. Get Product Data
         val productId = intent.getStringExtra("productId")
         if (productId == null) {
             Toast.makeText(this, "Product ID missing", Toast.LENGTH_SHORT).show()
@@ -63,11 +58,18 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun setupSystemUI() {
-        // Pushes content behind status bar but makes icons visible
+        // 1. Enable full screen drawing
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val controller = WindowCompat.getInsetsController(window, window.decorView)
         controller.isAppearanceLightStatusBars = true
         window.statusBarColor = Color.TRANSPARENT
+
+        // 2. Fix: Add padding to the AppBar so it's not hidden under the status bar (time/notifications)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(0, systemBars.top, 0, 0)
+            insets
+        }
     }
 
     private fun loadProduct(productId: String) {
@@ -94,6 +96,8 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.tvName.text = item.name
         binding.tvPrice.text = "₹${item.minPrice}"
         binding.tvDescription.text = item.description ?: "No description available"
+        
+        binding.tvRating.text = "${item.ratings?.average ?: 0.0} (${item.ratings?.count ?: 0} reviews)"
 
         val imageUrl = when {
             item.coverImage.isNullOrBlank() -> null
@@ -103,46 +107,54 @@ class ProductDetailActivity : AppCompatActivity() {
 
         Glide.with(this)
             .load(imageUrl)
-            .placeholder(R.drawable.ic_logo) // Use your app logo as placeholder
+            .placeholder(R.drawable.ic_logo)
             .error(R.drawable.ic_error)
             .into(binding.ivProduct)
     }
 
     private fun setupAddToCart(product: ProductDto) {
         binding.btnAddToCart.setOnClickListener {
-            // ✅ CHECK 1: Session Check (Prevents 401 Error)
             if (session.getToken() == null) {
                 Toast.makeText(this, "Please login to add items to cart", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            // ✅ CHECK 2: Stock Check
             val selectedVariant = product.variants?.firstOrNull { it.stock > 0 }
-            val selectedSku = selectedVariant?.sku
-
-            if (selectedSku == null) {
+            
+            if (selectedVariant == null) {
                 Toast.makeText(this, "Sorry, this product is out of stock", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // 3. Execute Add to Cart
-            addToCartLogic(product.id, selectedSku)
+            val quantity = binding.tvQuantity.text.toString().toIntOrNull() ?: 1
+            addToCartLogic(product.id, "default-sku", quantity)
+        }
+
+        binding.btnPlus.setOnClickListener {
+            val current = binding.tvQuantity.text.toString().toIntOrNull() ?: 1
+            binding.tvQuantity.text = (current + 1).toString()
+        }
+
+        binding.btnMinus.setOnClickListener {
+            val current = binding.tvQuantity.text.toString().toIntOrNull() ?: 1
+            if (current > 1) {
+                binding.tvQuantity.text = (current - 1).toString()
+            }
         }
     }
 
-    private fun addToCartLogic(productId: String, sku: String) {
+    private fun addToCartLogic(productId: String, sku: String, quantity: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val cartApi = RetrofitClient.getInstance(this@ProductDetailActivity).create(CartApi::class.java)
                 val cartRepo = CartRepository(cartApi)
 
-                val response = cartRepo.addToCart(productId, sku, 1)
+                val response = cartRepo.addToCart(productId, sku, quantity)
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         Toast.makeText(this@ProductDetailActivity, "Added to Cart! 🛒", Toast.LENGTH_SHORT).show()
                     } else {
-                        // Handle 401 or other API errors
                         val errorMsg = if (response.code() == 401) "Session expired. Please re-login." else "Failed to add"
                         Toast.makeText(this@ProductDetailActivity, errorMsg, Toast.LENGTH_SHORT).show()
                     }

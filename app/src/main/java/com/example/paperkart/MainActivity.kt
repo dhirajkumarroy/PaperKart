@@ -14,6 +14,7 @@ import com.example.paperkart.databinding.ActivityMainBinding
 import com.example.paperkart.features.auth.AuthActivity
 import com.example.paperkart.features.categories.CategoriesFragment
 import com.example.paperkart.features.home.HomeFragment
+import com.example.paperkart.features.order.OrderFragment
 import com.example.paperkart.features.user.ProfileFragment
 
 // Import your other fragments here as you create them:
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_orders -> {
                     // Replace with OrdersFragment() once created
-                    // loadFragment(OrdersFragment())
+                     loadFragment(OrderFragment())
                     true
                 }
                 R.id.nav_profile -> {

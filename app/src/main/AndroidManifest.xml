@@ -54,5 +54,28 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".features.order.CheckoutActivity"
+            android:label="Checkout"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".features.order.OrderSuccessActivity"
+            android:label="Order Confirmed"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".features.order.OrderListActivity"
+            android:label="My Orders"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_test_YOUR_KEY_HERE" />
+
     </application>
 </manifest>
