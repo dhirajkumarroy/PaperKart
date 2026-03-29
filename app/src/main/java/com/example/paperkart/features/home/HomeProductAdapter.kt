@@ -24,11 +24,25 @@ class HomeProductAdapter(
             binding.tvPrice.text = "₹${product.minPrice}"
             binding.tvRating.text = product.ratings?.average?.toString() ?: "0.0"
 
+            // ✅ FIXED: Extract .url from the ImageDto object
+            val rawPath = product.coverImage?.url
+
             val imageUrl = when {
-                product.coverImage.isNullOrBlank() -> null
-                product.coverImage.startsWith("http") -> product.coverImage
+                rawPath.isNullOrBlank() -> null
+
+                // If the URL is already absolute (Cloudinary)
+                rawPath.startsWith("http") -> {
+                    // Safety check for IP shifts (using your current working IP)
+                    rawPath.replace("192.168.0.198", "192.168.0.197")
+                }
+
+                // If the URL is relative (Local storage)
                 else -> {
-                    val cleanPath = product.coverImage.removePrefix("/")
+                    // Remove leading slashes and redundant 'uploads/' prefix
+                    val cleanPath = rawPath.removePrefix("/")
+                        .removePrefix("uploads/")
+
+                    // Constants.IMAGE_BASE_URL should be "http://192.168.0.197:3000/uploads/"
                     Constants.IMAGE_BASE_URL + cleanPath
                 }
             }

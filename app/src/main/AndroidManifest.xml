@@ -15,7 +15,6 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/ic_paperkart_logo"
-
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_paperkart_logo"
         android:supportsRtl="true"
@@ -26,10 +25,11 @@
         <activity
             android:name=".features.auth.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.PaperKart.NoActionBar"> <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+            android:theme="@style/Theme.PaperKart.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -70,6 +70,20 @@
         <activity
             android:name=".features.order.OrderListActivity"
             android:label="My Orders"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- ✅ Added Watchlist Activity -->
+        <activity
+            android:name=".features.watchlist.WatchlistActivity"
+            android:label="My Watchlist"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- ✅ Added Notification Activity -->
+        <activity
+            android:name=".features.notification.NotificationActivity"
+            android:label="Notifications"
             android:exported="false"
             android:screenOrientation="portrait" />
 

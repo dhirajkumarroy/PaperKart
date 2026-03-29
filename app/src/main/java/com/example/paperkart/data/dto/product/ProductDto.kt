@@ -7,17 +7,34 @@ data class ProductDto(
     val name: String,
     val description: String?,
     val productType: String,
-    val coverImage: String?,
+
+    // 🔥 FIXED: Changed from String to ImageDto object
+    val coverImage: ImageDto?,
+
+    // 🔥 ADDED: This matches the JSON field directly
+    val priceRange: PriceRangeDto?,
+
     val variants: List<VariantDto>?,
-    val ratings: RatingsDto?
+    val ratings: RatingsDto?,
+    val status: String?
 ) {
-    // Helper to show the starting price in lists
+    // Helper to get price from the pre-computed server range
     val minPrice: Double
-        get() = variants?.minOfOrNull { it.price } ?: 0.0
+        get() = priceRange?.min ?: variants?.minOfOrNull { it.price } ?: 0.0
 }
 
+data class ImageDto(
+    val url: String?,
+    val public_id: String?
+)
+
+data class PriceRangeDto(
+    val min: Double,
+    val max: Double
+)
+
 data class VariantDto(
-    val sku: String,   // ✅ Added: This was missing and causing the error
+    val sku: String,
     val price: Double,
     val stock: Int,
     val reservedStock: Int? = 0

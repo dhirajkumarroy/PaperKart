@@ -1,19 +1,26 @@
 package com.example.paperkart.features.home
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.paperkart.R
 import com.example.paperkart.core.network.RetrofitClient
 import com.example.paperkart.core.utils.SessionManager
+import com.example.paperkart.data.api.NotificationApi
 import com.example.paperkart.data.api.ProductApi
 import com.example.paperkart.databinding.FragmentHomeBinding
 import com.example.paperkart.features.cart.CartFragment
+import com.example.paperkart.features.notification.NotificationActivity
+import com.example.paperkart.features.notification.NotificationViewModel
 import com.example.paperkart.features.product.*
+import com.example.paperkart.features.watchlist.WatchlistActivity
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -21,6 +28,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: ProductViewModel
+    private lateinit var notificationViewModel: NotificationViewModel
     private lateinit var adapter: HomeProductAdapter
     private lateinit var session: SessionManager
 
@@ -28,104 +36,138 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
-        // 1. Initialize Session Manager to get User Data
         session = SessionManager(requireContext())
 
-        // 2. Setup UI and Logic
+        // 1. Reset Status Bar to match other fragments (My Order, Profile)
+        setupSystemUI()
+
+        // 2. UI Setup
         setupUserHeader()
-        setupViewModel()
+        setupViewModels()
         setupRecyclerView()
         setupObservers()
         setupClickListeners()
 
-        // 3. Initial Data Load
+        // 3. Data Fetching
         viewModel.loadProducts()
+        notificationViewModel.fetchUnreadCount()
+    }
+
+    private fun setupSystemUI() {
+        val window = requireActivity().window
+        
+        // Return to standard behavior so it matches Order and Profile fragments
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        
+        // Set standard white status bar with dark icons
+        window.statusBarColor = Color.WHITE
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = true
+        }
+
+        // Remove the manual padding listener that was causing "Double Padding"
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBarLayout, null)
     }
 
     private fun setupUserHeader() {
-        // Displays the name saved in SharedPreferences during Login
         val userName = session.getUserName()
-        binding.tvUserName.text = if (!userName.isNullOrEmpty()) {
-            userName
-        } else {
-            "PaperKart User"
+        binding.tvUserName.text = if (!userName.isNullOrEmpty()) userName else "PaperKart User"
+
+        val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
+        binding.tvGreeting.text = when (hour) {
+            in 0..11 -> "Good Morning,"
+            in 12..16 -> "Good Afternoon,"
+            else -> "Good Evening,"
         }
     }
 
     private fun setupClickListeners() {
-        // ✅ CART ICON: Navigates to the CartFragment
-        binding.ivCart.setOnClickListener {
+        binding.btnWatchlist.setOnClickListener {
+            startActivity(Intent(requireContext(), WatchlistActivity::class.java))
+        }
+
+        binding.btnNotification.setOnClickListener {
+            startActivity(Intent(requireContext(), NotificationActivity::class.java))
+        }
+
+        binding.btnCart.setOnClickListener {
             navigateToCart()
         }
 
-        // ✅ SEARCH CARD: Usually opens a search interface.
-        // Currently set to a Toast so it doesn't accidentally open the Cart.
-        binding.searchCard.setOnClickListener {
-            Toast.makeText(requireContext(), "Search coming soon!", Toast.LENGTH_SHORT).show()
-            // In the future, replace this with navigateToSearch()
+        binding.cardSearch.setOnClickListener {
+            Toast.makeText(requireContext(), "Search functionality coming soon!", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun navigateToCart() {
         parentFragmentManager.beginTransaction()
-            .setCustomAnimations(
-                android.R.anim.fade_in,
-                android.R.anim.fade_out,
-                android.R.anim.fade_in,
-                android.R.anim.fade_out
-            )
+            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             .replace(R.id.fragmentContainer, CartFragment())
-            .addToBackStack(null) // Allows user to press 'Back' to return home
+            .addToBackStack(null)
             .commit()
+    }
+
+    private fun setupViewModels() {
+        val productApi = RetrofitClient.getInstance(requireContext()).create(ProductApi::class.java)
+        val productRepo = ProductRepository(productApi)
+
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return ProductViewModel(productRepo) as T
+            }
+        })[ProductViewModel::class.java]
+
+        val notifApi = RetrofitClient.getInstance(requireContext()).create(NotificationApi::class.java)
+        notificationViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return NotificationViewModel(notifApi) as T
+            }
+        })[NotificationViewModel::class.java]
     }
 
     private fun setupRecyclerView() {
         adapter = HomeProductAdapter { product ->
-            // Opens the Detail Activity for the clicked product
             val intent = Intent(requireContext(), ProductDetailActivity::class.java)
             intent.putExtra("productId", product.id)
             startActivity(intent)
         }
 
-        binding.recyclerView.apply {
+        binding.rvProducts.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = this@HomeFragment.adapter
+            isNestedScrollingEnabled = false
         }
 
-        // Swipe to Refresh logic
-        binding.swipeRefresh.setOnRefreshListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.loadProducts()
+            notificationViewModel.fetchUnreadCount()
         }
-    }
-
-    private fun setupViewModel() {
-        val api = RetrofitClient.getInstance(requireContext()).create(ProductApi::class.java)
-        val repo = ProductRepository(api)
-
-        val factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                return ProductViewModel(repo) as T
-            }
-        }
-        viewModel = ViewModelProvider(this, factory)[ProductViewModel::class.java]
     }
 
     private fun setupObservers() {
-        // Update product list when data changes
         viewModel.products.observe(viewLifecycleOwner) { products ->
             adapter.submitList(products)
-            binding.swipeRefresh.isRefreshing = false
+            binding.swipeRefreshLayout.isRefreshing = false
         }
 
-        // Show/Hide progress bar
+        notificationViewModel.unreadCount.observe(viewLifecycleOwner) { count ->
+            // Update UI if needed
+        }
+
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        notificationViewModel.fetchUnreadCount()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // Clean up to prevent memory leaks
+        _binding = null
     }
 }

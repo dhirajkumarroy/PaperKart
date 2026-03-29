@@ -15,10 +15,10 @@ class ProductAdapter(
 ) : RecyclerView.Adapter<ProductAdapter.VH>() {
 
     companion object {
-        // ✅ Updated to your current Mac IP
+        // ✅ Current Server Base URL
         private const val BASE_URL = "http://192.168.0.197:3000/"
 
-        // The "Ghost" IP that causes the timeout
+        // Dynamic IP Fixes for mixed environments
         private const val OLD_IP = "192.168.0.198"
         private const val CURRENT_IP = "192.168.0.197"
     }
@@ -42,34 +42,40 @@ class ProductAdapter(
         holder.binding.tvName.text = item.name
         holder.binding.tvPrice.text = "₹${item.minPrice}"
 
-        // 2. Build and Fix the Image URL
-        val imageUrl = when {
-            item.coverImage.isNullOrBlank() -> null
+        // 2. Extract and Fix the Image URL
+        // Now extracting .url from the ImageDto object
+        val rawPath = item.coverImage?.url
 
-            // If the URL is absolute (starts with http)
-            item.coverImage.startsWith("http") -> {
-                // ✅ DYNAMIC FIX: Swap the old IP for the new one if found
-                item.coverImage.replace(OLD_IP, CURRENT_IP)
+        val imageUrl = when {
+            rawPath.isNullOrBlank() -> null
+
+            // If it's a full Cloudinary/External URL
+            rawPath.startsWith("http") -> {
+                rawPath.replace(OLD_IP, CURRENT_IP)
             }
 
-            // If the URL is relative (e.g., "uploads/img.jpg")
+            // If it's a local path (e.g., "books/image.jpg" or "uploads/books/image.jpg")
             else -> {
-                val cleanPath = item.coverImage.removePrefix("/")
-                BASE_URL + cleanPath
+                // Remove redundant prefixes to avoid double slashes or triple paths
+                val cleanPath = rawPath.removePrefix("/")
+                    .removePrefix("uploads/")
+
+                // Construct: http://192.168.0.197:3000/uploads/books/...
+                "${BASE_URL}uploads/$cleanPath"
             }
         }
 
         // 3. Load with Glide
         Glide.with(holder.itemView.context)
             .load(imageUrl)
-            .placeholder(R.drawable.ic_cart) // Your custom PaperKart logo
-            .error(R.drawable.ic_cart)      // Fallback if network fails
+            .placeholder(R.drawable.ic_cart)
+            .error(R.drawable.ic_cart)
             .centerCrop()
             .into(holder.binding.ivImage)
 
-        // 4. Handle Clicks (Ensure this matches your DTO field: id vs _id)
+        // 4. Handle Clicks (uses _id from DTO)
         holder.itemView.setOnClickListener {
-            item.id?.let { id -> onClick(id) }
+            onClick(item.id)
         }
     }
 

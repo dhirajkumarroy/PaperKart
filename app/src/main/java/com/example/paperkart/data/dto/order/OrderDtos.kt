@@ -1,5 +1,6 @@
 package com.example.paperkart.data.dto.order
 
+import com.example.paperkart.data.dto.product.ImageDto
 import com.google.gson.annotations.SerializedName
 
 // ── REQUEST DTOS (Sent to Server) ──────────────────────────────
@@ -8,10 +9,10 @@ data class ShippingAddressRequest(
     @SerializedName("name")     val name:     String,
     @SerializedName("phone")    val phone:    String,
     @SerializedName("address")  val address:  String,
-    @SerializedName("landmark") val landmark: String?,
-    @SerializedName("city")     val city:     String,
-    @SerializedName("state")    val state:    String,
-    @SerializedName("pincode")  val pincode:  String
+    @SerializedName("landmark") val landmark: String? = null,
+    @SerializedName("city")     val city:     String = "Varanasi",
+    @SerializedName("state")    val state:    String = "UP",
+    @SerializedName("pincode")  val pincode:  String = "221005"
 )
 
 data class PlaceOrderRequest(
@@ -23,52 +24,69 @@ data class PlaceOrderRequest(
 // ── RESPONSE DTOS (Received from Server) ───────────────────────
 
 data class ShippingAddressDto(
-    @SerializedName("name")     val name:     String,
-    @SerializedName("phone")    val phone:    String,
-    @SerializedName("address")  val address:  String,
-    @SerializedName("landmark") val landmark: String?,
-    @SerializedName("city")     val city:     String,
-    @SerializedName("state")    val state:    String,
-    @SerializedName("pincode")  val pincode:  String
+    val name: String,
+    val phone: String,
+    val address: String,
+    val landmark: String?,
+    val city: String,
+    val state: String,
+    val pincode: String
 )
 
 data class PaymentDto(
-    @SerializedName("method")            val method: String,
-    @SerializedName("status")            val status: String,
-    @SerializedName("razorpayOrderId")   val razorpayOrderId: String?,
-    @SerializedName("razorpayPaymentId") val razorpayPaymentId: String?,
-    @SerializedName("razorpaySignature") val razorpaySignature: String?, // Added for online verification
-    @SerializedName("paidAt")            val paidAt: String?
+    val method: String,
+    val status: String,
+    val razorpayOrderId: String?,
+    val razorpayPaymentId: String?,
+    val razorpaySignature: String?,
+    val paidAt: String?
 )
 
 data class ShipmentDto(
-    @SerializedName("courier")     val courier: String?,
-    @SerializedName("awb")         val awb: String?,
-    @SerializedName("trackingUrl") val trackingUrl: String?,
-    @SerializedName("labelUrl")    val labelUrl: String?
+    val courier: String?,
+    val awb: String?,
+    val trackingUrl: String?,
+    val labelUrl: String?,
+    val status: String?,
+    val pickupScheduled: Boolean? = false,
+    val pickupScheduledAt: String? = null
 )
 
 data class OrderItemDto(
-    @SerializedName("title")    val title: String,
-    @SerializedName("quantity") val quantity: Int,
-    @SerializedName("price")    val price: Double,
-    @SerializedName("image")    val image: String? // Added: Useful for showing product icons in Order List
+    val product: OrderProductSummaryDto?,
+    val quantity: Int,
+    val price: Double,
+    val sku: String?
+)
+
+data class OrderProductSummaryDto(
+    @SerializedName("_id") val id: String,
+    val name: String,
+    val images: List<ImageDto>? // Backend uses .populate("items.product", "name images slug")
 )
 
 data class OrderDto(
-    @SerializedName("_id")             val id: String,
-    @SerializedName("items")           val items: List<OrderItemDto>,
-    @SerializedName("totalAmount")     val totalAmount: Double,
-    @SerializedName("status")          val status: String, // e.g., "PLACED", "SHIPPED"
-    @SerializedName("payment")         val payment: PaymentDto,
-    @SerializedName("shippingAddress") val shippingAddress: ShippingAddressDto,
-    @SerializedName("shipment")        val shipment: ShipmentDto?,
-    @SerializedName("createdAt")       val createdAt: String
+    @SerializedName("_id") val id: String,
+    val user: Any?, // Can be ID or User object depending on population
+    val items: List<OrderItemDto>,
+    val totalAmount: Double,
+    val status: String,
+    val payment: PaymentDto,
+    val shippingAddress: ShippingAddressDto,
+    val shipment: ShipmentDto?,
+    val history: List<OrderHistoryDto>?,
+    val createdAt: String
+)
+
+data class OrderHistoryDto(
+    val status: String,
+    val message: String,
+    val timestamp: String
 )
 
 data class OrderListResponse(
-    @SerializedName("totalOrders") val totalOrders: Int,
-    @SerializedName("data")        val orders: List<OrderDto>,
-    @SerializedName("totalPages")  val totalPages: Int,
-    @SerializedName("currentPage") val currentPage: Int // Added: Crucial for pagination logic
+    val page: Int,
+    val totalPages: Int,
+    val totalOrders: Int,
+    val data: List<OrderDto>
 )

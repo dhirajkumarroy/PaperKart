@@ -1,9 +1,10 @@
-// ─────────────────────────────────────────────────────────────
-// FILE: data/dto/auth/AuthRequests.kt
-// ─────────────────────────────────────────────────────────────
 package com.example.paperkart.data.dto.auth
 
 import com.google.gson.annotations.SerializedName
+
+/**
+ * ── LOGIN & REGISTRATION ──
+ */
 
 data class LoginRequest(
     @SerializedName("email")    val email:    String? = null,
@@ -17,6 +18,18 @@ data class RegisterRequest(
     @SerializedName("password") val password: String
 )
 
+/**
+ * ── REFRESH TOKEN (The "Stay Logged In" Key) ──
+ * This must match what your Node controller expects in req.body
+ */
+data class RefreshRequest(
+    @SerializedName("refreshToken") val refreshToken: String
+)
+
+/**
+ * ── OTP & PHONE AUTH ──
+ */
+
 data class SendOtpRequest(
     @SerializedName("phone") val phone: String
 )
@@ -25,6 +38,10 @@ data class VerifyOtpRequest(
     @SerializedName("phone") val phone: String,
     @SerializedName("otp")   val otp:   String
 )
+
+/**
+ * ── PASSWORD RECOVERY ──
+ */
 
 data class ForgotPasswordRequest(
     @SerializedName("email") val email: String
@@ -39,6 +56,10 @@ data class ChangePasswordRequest(
     @SerializedName("oldPassword") val oldPassword: String,
     @SerializedName("newPassword") val newPassword: String
 )
+
+/**
+ * ── SOCIAL & LINKING ──
+ */
 
 data class GoogleLoginRequest(
     @SerializedName("token") val token: String

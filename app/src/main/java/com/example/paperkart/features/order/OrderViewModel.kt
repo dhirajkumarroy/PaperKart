@@ -111,7 +111,8 @@ class OrderViewModel(private val api: OrderApi) : ViewModel() {
             try {
                 val response = api.getMyOrders(page, limit)
                 if (response.isSuccessful) {
-                    userOrders.postValue(response.body()?.orders ?: emptyList())
+                    // Corrected from .orders to .data to match OrderListResponse DTO
+                    userOrders.postValue(response.body()?.data ?: emptyList())
                 }
             } catch (e: Exception) {
                 error.postValue(e.localizedMessage)

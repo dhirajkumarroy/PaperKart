@@ -1,26 +1,32 @@
-// ─────────────────────────────────────────────────────────────
-// FILE: data/dto/auth/AuthResponses.kt
-// ─────────────────────────────────────────────────────────────
 package com.example.paperkart.data.dto.auth
 
 import com.example.paperkart.data.dto.user.UserDto
 import com.google.gson.annotations.SerializedName
 
-// Generic API envelope
+/**
+ * ── UNIVERSAL ENVELOPE ──
+ * Matches your Node.js success() helper: { success, message, data }
+ */
 data class ApiResponse<T>(
     @SerializedName("success") val success: Boolean,
     @SerializedName("message") val message: String?,
     @SerializedName("data")    val data:    T?
 )
 
-// POST /login  |  POST /send-otp  |  POST /verify-otp
+/**
+ * ── AUTH DATA (Login, Verify OTP, Refresh Token) ──
+ * Used when the backend returns a new session.
+ */
 data class AuthData(
     @SerializedName("accessToken")  val accessToken:  String,
     @SerializedName("refreshToken") val refreshToken: String,
     @SerializedName("user")         val user:         UserDto
 )
 
-// GET /link/status
+/**
+ * ── LINK STATUS ──
+ * Used for post-login logic to check if user needs to link phone/email.
+ */
 data class LinkStatusData(
     @SerializedName("providers")       val providers:       List<String>,
     @SerializedName("hasEmail")        val hasEmail:        Boolean,
@@ -32,7 +38,10 @@ data class LinkStatusData(
     @SerializedName("shouldAddName")   val shouldAddName:   Boolean
 )
 
-// Simple message response (logout, forgot-password, send-otp, etc.)
+/**
+ * ── MESSAGE ONLY ──
+ * For simple actions like logout, forgot-password, or change-password.
+ */
 data class MessageData(
     @SerializedName("message") val message: String
 )

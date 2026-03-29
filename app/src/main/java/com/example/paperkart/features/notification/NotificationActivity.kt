@@ -1,26 +1,25 @@
-package com.example.paperkart.features.watchlist
+package com.example.paperkart.features.notification
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.paperkart.core.network.RetrofitClient
-import com.example.paperkart.data.api.WatchlistApi
-import com.example.paperkart.databinding.FragmentWishlistBinding
-import com.example.paperkart.features.product.ProductDetailActivity
+import com.example.paperkart.data.api.NotificationApi
+import com.example.paperkart.databinding.ActivityOrderListBinding // Reusing a list layout if specialized one doesn't exist, or use fragment_notifications.xml
+import com.example.paperkart.databinding.FragmentNotificationsBinding
 
-class WatchlistActivity : AppCompatActivity() {
+class NotificationActivity : AppCompatActivity() {
 
-    private lateinit var binding: FragmentWishlistBinding
-    private lateinit var viewModel: WatchlistViewModel
-    private lateinit var adapter: WatchlistAdapter
+    private lateinit var binding: FragmentNotificationsBinding
+    private lateinit var viewModel: NotificationViewModel
+    private lateinit var adapter: NotificationAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentWishlistBinding.inflate(layoutInflater)
+        binding = FragmentNotificationsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupToolbar()
@@ -28,44 +27,47 @@ class WatchlistActivity : AppCompatActivity() {
         setupRecyclerView()
         setupObservers()
 
-        viewModel.fetchWatchlist()
+        viewModel.fetchNotifications()
     }
 
     private fun setupToolbar() {
         binding.toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+        
+        binding.btnReadAll.setOnClickListener {
+            viewModel.markAllRead()
+        }
     }
 
     private fun setupViewModel() {
-        val api = RetrofitClient.getInstance(this).create(WatchlistApi::class.java)
+        val api = RetrofitClient.getInstance(this).create(NotificationApi::class.java)
         val factory = object : ViewModelProvider.Factory {
             override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                return WatchlistViewModel(api) as T
+                return NotificationViewModel(api) as T
             }
         }
-        viewModel = ViewModelProvider(this, factory)[WatchlistViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[NotificationViewModel::class.java]
     }
 
     private fun setupRecyclerView() {
-        adapter = WatchlistAdapter(emptyList(), onItemClick = { productId ->
-            val intent = Intent(this, ProductDetailActivity::class.java)
-            intent.putExtra("productId", productId)
-            startActivity(intent)
-        }, onRemoveClick = { productId ->
-            viewModel.toggleWatchlist(productId)
-        })
+        adapter = NotificationAdapter(emptyList()) { notification ->
+            if (!notification.read) {
+                viewModel.markAsRead(notification.id)
+            }
+            // Handle navigation based on notification.type (e.g. open Order details)
+        }
 
-        binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
         binding.swipeRefresh.setOnRefreshListener {
-            viewModel.fetchWatchlist()
+            viewModel.fetchNotifications()
         }
     }
 
     private fun setupObservers() {
-        viewModel.watchlistItems.observe(this) { list ->
+        viewModel.notifications.observe(this) { list ->
             adapter.updateData(list)
             binding.swipeRefresh.isRefreshing = false
             binding.layoutEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
@@ -80,11 +82,6 @@ class WatchlistActivity : AppCompatActivity() {
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
                 binding.swipeRefresh.isRefreshing = false
             }
-        }
-        
-        // Refresh list if an item is removed
-        viewModel.isWatched.observe(this) {
-            viewModel.fetchWatchlist()
         }
     }
 }

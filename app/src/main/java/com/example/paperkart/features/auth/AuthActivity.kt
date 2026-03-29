@@ -31,10 +31,20 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sessionManager = SessionManager(this)
+
+        // 2. ✅ ADD THIS: The Auto-Login Check
+        // If the user is already logged in, jump straight to MainActivity
+        if (sessionManager.isLoggedIn()) {
+            navigateToMain()
+            return // Critical: stop the rest of onCreate from running
+        }
+
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sessionManager = SessionManager(this)
+
 
         setupWindowInsets()
         setupViewModel()

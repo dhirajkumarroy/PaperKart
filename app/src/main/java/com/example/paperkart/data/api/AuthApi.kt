@@ -78,4 +78,10 @@ interface AuthApi {
 
     @GET("auth/link/status")
     suspend fun getLinkStatus(): Response<ApiResponse<LinkStatusData>>
+
+    // Inside AuthApi.kt
+    @POST("auth/refresh-token")
+    suspend fun refreshAccessToken(
+        @Body body: RefreshRequest  // ✅ Change this to @Body RefreshRequest
+    ): retrofit2.Response<ApiResponse<AuthData>>
 }
